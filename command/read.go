@@ -48,13 +48,8 @@ func CmdRead(c *cli.Context) error {
 	// fmt.Println(string(b))
 
 	for _, r := range string(b) {
-		if isKanji(r) {
-			// fmt.Printf("%s", string(char))
-			if isCompulsory(r) {
-				fmt.Printf("%s", string(r))
-			} else {
-				fmt.Printf("%s…?", string(r))
-			}
+		if isKanji(r) && !isCompulsory(r) {
+			fmt.Printf("%s…?", string(r))
 		} else {
 			fmt.Printf("%s", string(r))
 		}
