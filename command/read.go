@@ -2,20 +2,21 @@ package command
 
 import (
 	"fmt"
-	"os"
-	"io/ioutil"
 	"github.com/urfave/cli"
+	"io/ioutil"
+	"os"
 	"regexp"
+	"strings"
 )
 
 func isKanji(r rune) bool {
-	reg := regexp.MustCompile(`[\x{3400}-\x{9FFF}]`)
+	reg := regexp.MustCompile(`[\x{2E80}-\x{2FDF}々〇〻\x{3400}-\x{4DBF}\x{4E00}-\x{9FFF}\x{F900}-\x{FAFF}\x{20000}-\x{2FFFF}]`)
 	return reg.MatchString(string(r))
 }
 
 func CmdRead(c *cli.Context) error {
 	// Write your code here
-	
+
 	// p, _ := os.Getwd()
 	// fmt.Println(p)
 
