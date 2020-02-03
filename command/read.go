@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
@@ -47,9 +48,13 @@ func CmdRead(c *cli.Context) error {
 	// output
 	// fmt.Println(string(b))
 
+	// red := color.New(color.FgRed, color.BgGreen)
+	black := color.New(color.FgHiBlack, color.BgHiWhite)
+
 	for _, r := range string(b) {
 		if isKanji(r) && !isCompulsory(r) {
-			fmt.Printf("%s…?", string(r))
+			// fmt.Printf("%s…?", string(r))
+			black.Printf("%s", string(r))
 		} else {
 			fmt.Printf("%s", string(r))
 		}
