@@ -1,8 +1,9 @@
 package command
 
 import (
+	"bufio"
 	"fmt"
-	_ "github.com/fatih/color"
+	"github.com/fatih/color"
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
@@ -21,8 +22,41 @@ func isCompulsory(r rune) bool {
 	return strings.Contains(compulsory, string(r))
 }
 
+func Question(q string) bool {
+	result := true
+	fmt.Print(q)
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		i := scanner.Text()
+
+		if i == "Y" || i == "y" {
+			break
+		} else if i == "N" || i == "n" {
+			result = false
+			break
+		} else {
+			fmt.Println("YかNかでお願いしますっ！")
+			fmt.Print(q)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
 func CmdRead(c *cli.Context) error {
 	// Write your code here
+
+	if Question("読んでもいいですか……? [y/n]: ") {
+		fmt.Println("わぁ……! じゃあ、いきますね!\n")
+	} else {
+		fmt.Println("分かりました!")
+		return nil
+	}
 
 	// p, _ := os.Getwd()
 	// fmt.Println(p)
@@ -47,13 +81,13 @@ func CmdRead(c *cli.Context) error {
 	// output
 	// fmt.Println(string(b))
 
-	// red := color.New(color.BgRed, color.Bold)
+	red := color.New(color.BgRed, color.Bold)
 	// black := color.New(color.FgHiBlack, color.BgHiWhite)
 
 	// TODO: kanji count
-	// var total int
-	// var kanji int
-	// var unknown int
+	var total int
+	var kanji int
+	var unknown int
 
 	// for _, r := range string(b) {
 	// 	if isKanji(r) && !isCompulsory(r) {
@@ -64,43 +98,50 @@ func CmdRead(c *cli.Context) error {
 	// 	}
 	// }
 
-	// for _, r := range string(b) {
-	// 	total++
-	// 	if isKanji(r) {
-	// 		kanji++
-	// 		if isCompulsory(r) {
-	// 			fmt.Printf("%s", string(r))
-	// 		} else {
-	// 			unknown++
-	// 			red.Printf("%s", string(r))
-	// 		}
-	// 	} else {
-	// 		fmt.Printf("%s", string(r))
-	// 	}
-	// }
-
-	// 果穂さんの使った漢字追加用
-	slice := strings.Split(string(b), "\n")
-
-	for _, l := range slice {
-		if strings.Contains(l, "果穂「") {
-			for _, r := range l {
-				if isKanji(r) {
-					if isCompulsory(r) {
-						// fmt.Printf("%s", string(r))
-					} else {
-						// red.Printf("%s", string(r))
-						fmt.Printf("%s\n", string(r))
-					}
-				} else {
-					// fmt.Printf("%s", string(r))
-				}
+	for _, r := range string(b) {
+		total++
+		if isKanji(r) {
+			kanji++
+			if isCompulsory(r) {
+				fmt.Printf("%s", string(r))
+			} else {
+				unknown++
+				red.Printf("%s", string(r))
 			}
-			// fmt.Printf("\n")
+		} else {
+			fmt.Printf("%s", string(r))
 		}
 	}
 
+	// TODO: ここ関数化しよう
+	// 果穂さんの使った漢字追加用
+	// slice := strings.Split(string(b), "\n")
+
+	// for _, l := range slice {
+	// 	if strings.Contains(l, "果穂「") {
+	// 		for _, r := range l {
+	// 			if isKanji(r) {
+	// 				if isCompulsory(r) {
+	// 					// fmt.Printf("%s", string(r))
+	// 				} else {
+	// 					// red.Printf("%s", string(r))
+	// 					fmt.Printf("%s\n", string(r))
+	// 				}
+	// 			} else {
+	// 				// fmt.Printf("%s", string(r))
+	// 			}
+	// 		}
+	// 		// fmt.Printf("\n")
+	// 	}
+	// }
+
 	// fmt.Println("\n>> finish")
-	// fmt.Printf("文字数は全部で%d文字で、そのうち漢字は%d文字でした！\n読めない漢字が%d文字ありました……\n", total, kanji, unknown)
+	fmt.Printf("\n\n文字数は全部で%d文字で、そのうち漢字は%d文字でした！\n", total, kanji)
+
+	if unknown != 0 {
+		fmt.Printf("読めない漢字が%d文字ありました……\n", unknown)
+	} else {
+		fmt.Printf("全部読めましたーっ！\n")
+	}
 	return nil
 }
