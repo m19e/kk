@@ -2,7 +2,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/fatih/color"
+	_ "github.com/fatih/color"
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
@@ -32,7 +32,7 @@ func CmdRead(c *cli.Context) error {
 	// 	// fmt.Println(file.Name())
 	// }
 
-	fmt.Println(">> read file...")
+	// fmt.Println(">> read file...")
 	// open file
 	f, err := os.Open(c.Args().Get(0))
 	if err != nil {
@@ -47,13 +47,13 @@ func CmdRead(c *cli.Context) error {
 	// output
 	// fmt.Println(string(b))
 
-	red := color.New(color.BgRed, color.Bold)
+	// red := color.New(color.BgRed, color.Bold)
 	// black := color.New(color.FgHiBlack, color.BgHiWhite)
 
 	// TODO: kanji count
-	var total int
-	var kanji int
-	var unknown int
+	// var total int
+	// var kanji int
+	// var unknown int
 
 	// for _, r := range string(b) {
 	// 	if isKanji(r) && !isCompulsory(r) {
@@ -64,22 +64,43 @@ func CmdRead(c *cli.Context) error {
 	// 	}
 	// }
 
-	for _, r := range string(b) {
-		total++
-		if isKanji(r) {
-			kanji++
-			if isCompulsory(r) {
-				fmt.Printf("%s", string(r))
-			} else {
-				unknown++
-				red.Printf("%s", string(r))
+	// for _, r := range string(b) {
+	// 	total++
+	// 	if isKanji(r) {
+	// 		kanji++
+	// 		if isCompulsory(r) {
+	// 			fmt.Printf("%s", string(r))
+	// 		} else {
+	// 			unknown++
+	// 			red.Printf("%s", string(r))
+	// 		}
+	// 	} else {
+	// 		fmt.Printf("%s", string(r))
+	// 	}
+	// }
+
+	// 果穂さんの使った漢字追加用
+	slice := strings.Split(string(b), "\n")
+
+	for _, l := range slice {
+		if strings.Contains(l, "果穂「") {
+			for _, r := range l {
+				if isKanji(r) {
+					if isCompulsory(r) {
+						// fmt.Printf("%s", string(r))
+					} else {
+						// red.Printf("%s", string(r))
+						fmt.Printf("%s\n", string(r))
+					}
+				} else {
+					// fmt.Printf("%s", string(r))
+				}
 			}
-		} else {
-			fmt.Printf("%s", string(r))
+			// fmt.Printf("\n")
 		}
 	}
 
-	fmt.Println("\n>> finish")
-	fmt.Printf("文字数は全部で%d文字で、そのうち漢字は%d文字でした！\n読めない漢字が%d文字ありました……\n", total, kanji, unknown)
+	// fmt.Println("\n>> finish")
+	// fmt.Printf("文字数は全部で%d文字で、そのうち漢字は%d文字でした！\n読めない漢字が%d文字ありました……\n", total, kanji, unknown)
 	return nil
 }
