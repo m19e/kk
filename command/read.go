@@ -39,7 +39,6 @@ func CmdRead(c *cli.Context) error {
 		fmt.Println(err)
 	}
 
-	defer fmt.Println(">> finish")
 	defer f.Close()
 
 	// read all text
@@ -48,18 +47,39 @@ func CmdRead(c *cli.Context) error {
 	// output
 	// fmt.Println(string(b))
 
-	// red := color.New(color.FgRed, color.BgGreen)
-	black := color.New(color.FgHiBlack, color.BgHiWhite)
+	red := color.New(color.BgRed, color.Bold)
+	// black := color.New(color.FgHiBlack, color.BgHiWhite)
+
+	// TODO: kanji count
+	var total int
+	var kanji int
+	var unknown int
+
+	// for _, r := range string(b) {
+	// 	if isKanji(r) && !isCompulsory(r) {
+	// 		// fmt.Printf("%s…?", string(r))
+	// 		red.Printf("%s", string(r))
+	// 	} else {
+	// 		fmt.Printf("%s", string(r))
+	// 	}
+	// }
 
 	for _, r := range string(b) {
-		if isKanji(r) && !isCompulsory(r) {
-			// fmt.Printf("%s…?", string(r))
-			black.Printf("%s", string(r))
+		total++
+		if isKanji(r) {
+			kanji++
+			if isCompulsory(r) {
+				fmt.Printf("%s", string(r))
+			} else {
+				unknown++
+				red.Printf("%s", string(r))
+			}
 		} else {
 			fmt.Printf("%s", string(r))
 		}
 	}
 
-	fmt.Println("")
+	fmt.Println("\n>> finish")
+	fmt.Printf("文字数は全部で%d文字で、そのうち漢字は%d文字でした！\n読めない漢字が%d文字ありました……\n", total, kanji, unknown)
 	return nil
 }
