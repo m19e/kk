@@ -4,7 +4,13 @@
 
 ## Description
 
+CLI Tool - Kanji check for Kaho komiya
+
 ## Usage
+
+```bash
+kk read lemon.txt
+```
 
 ## Install
 
