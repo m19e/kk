@@ -153,6 +153,7 @@ func CmdRead(c *cli.Context) error {
 	f, err := os.Open(c.Args().Get(0))
 	if err != nil {
 		fmt.Println(err)
+		fmt.Println("すいません……ファイルが開けませんでした……")
 		return nil
 	}
 
